@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ATARK.Models.Entity
 {
-    public class StateOfTheSystem
+    public class StateOfTheSystem : BaseTable
     {
         [Key]
         public int StateOfTheSystemId { get; set; }
