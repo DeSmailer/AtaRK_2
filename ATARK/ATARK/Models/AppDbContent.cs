@@ -53,12 +53,12 @@ namespace ATARK.Models.Entity
             modelBuilder.Entity<ClosedWaterSupplyInstallation>()
                .HasOne(q => q.StateOfTheSystem)
                .WithOne(a => a.ClosedWaterSupplyInstallation)
-               .OnDelete(DeleteBehavior.Restrict);
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<StateOfTheSystem>()
                .HasOne(q => q.ClosedWaterSupplyInstallation)
                .WithOne(a => a.StateOfTheSystem)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

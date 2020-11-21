@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ATARK.Controllers.db
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class StateOfTheSystemController : ControllerBase
     {

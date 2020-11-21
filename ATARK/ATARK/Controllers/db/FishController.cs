@@ -41,8 +41,22 @@ namespace ATARK.Controllers.db
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Fish fish)
         {
-            await this.repository.AddAsync<Fish>(fish);
-
+            var pool = await this.repository.GetAsync<Pool>(true, x => x.PoolId == fish.PoolNowId);
+            string whoIsInThePool = pool.WhoIsInThePool;//fish herd none
+            if(whoIsInThePool == "fish")
+            {
+                await this.repository.AddAsync<Fish>(fish);
+            }
+            else if(whoIsInThePool == "none")
+            {
+                await this.repository.AddAsync<Fish>(fish);
+                pool.WhoIsInThePool = "fish";
+            }
+            else
+            {
+                throw new Exception("The herd is already in the pool");
+            }
+            await this.repository.UpdateAsync<Pool>(pool);
             return this.Ok();
         }
 
