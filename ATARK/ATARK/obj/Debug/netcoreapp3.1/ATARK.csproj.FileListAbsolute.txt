@@ -51,8 +51,6 @@ D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandar
 D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.csproj.CopyComplete
 D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\Humanizer.dll
 D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
-D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.csproj.CoreCompileInputs.cache
-D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.MvcApplicationPartsAssemblyInfo.cache
 D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\ATARK.deps.json
 D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\ATARK.runtimeconfig.json
 D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\ATARK.runtimeconfig.dev.json
@@ -61,3 +59,8 @@ D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\ATARK.pdb
 D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.dll
 D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.pdb
 D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.genruntimeconfig.cache
+D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\XHYPE\AtaRK_2\ATARK\ATARK\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.csproj.CoreCompileInputs.cache
+D:\XHYPE\AtaRK_2\ATARK\ATARK\obj\Debug\netcoreapp3.1\ATARK.MvcApplicationPartsAssemblyInfo.cache
