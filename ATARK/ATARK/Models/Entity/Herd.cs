@@ -18,5 +18,6 @@ namespace ATARK.Models.Entity
         public Pool Pool { get; set; }
         public float AverageWeightOfAnIndividual { get; set; }
         public int Quantity { get; set; }
+
     }
 }

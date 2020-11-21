@@ -89,5 +89,26 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Herd>(herd);
             return this.Ok();
         }
+        [HttpGet("{PoolIdId}")]
+        public async Task<IEnumerable<Herd>> GetAllHerdByPoolId(int PoolIdId)
+        {
+            var fishs = await this.repository.GetRangeAsync<Herd>(true, x => x.PoolIdNow == PoolIdId);
+            return fishs.ToArray();
+        }
+
+        [HttpGet("{CWSIId}")]
+        public async Task<IEnumerable<Herd>> GetAllHerdByCWSIId(int CWSIId)
+        {
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            List<Herd> fishs = new List<Herd>();
+            foreach (Pool pool in pools)
+            {
+                foreach (Herd h in this.repository.GetRange<Herd>(true, x => x.PoolIdNow == pool.PoolId))
+                {
+                    fishs.Add(h);
+                }
+            }
+            return fishs.ToArray();
+        }
     }
 }
