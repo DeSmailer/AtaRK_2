@@ -98,20 +98,43 @@ namespace ATARK.Controllers.db
             var fish = await this.repository.GetRangeAsync<Fish>(true, x => x.State == "Pregnancy");
             return fish.ToArray();
         }
-        [HttpGet("{CWSI_Id}")]
-        public async Task<IEnumerable<Fish>> GetAllPregnantFishByCWSI_Id(int CWSI_Id)
-        {
-         var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSI_Id);
-            List<Fish> fishs = new List<Fish>();
-            foreach(Pool pool in pools)
-            {
-                fishs.AddRange(await this.repository.GetRangeAsync<Fish>(true, x => x.PoolNowId == pool.PoolId && x.State == "Pregnancy"));
 
-            }
+        [HttpGet("{PoolIdId}")]
+        public async Task<IEnumerable<Fish>> GetAllPregnantFishByPoolId(int PoolIdId)
+        {
+            var fishs = await this.repository.GetRangeAsync<Fish>(true, x => (x.PoolNowId == PoolIdId && x.State == "Pregnancy"));
             return fishs.ToArray();
-            //from c in this.repository.dbContext.Customers
-            //where c.CustomerID == "LONEP"
-            //select c).Single<Customer>()
+        }
+
+        [HttpGet("{CWSIId}")]
+        public async Task<IEnumerable<Fish>> GetAllPregnantFishByCWSI_Id(int CWSIId)
+        {
+            //var fishs = await this.repository.GetRangeAsync<Fish>(true, x => new (x.ClosedWaterSupplyInstallationId == CWSIId);
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            List<int> fishsId = new List<int>();
+
+            foreach (Pool pool in pools)
+            {
+                var qwr = await this.repository.GetRangeAsync<Fish>(true, x => (x.PoolNowId ==pool.PoolId && x.State == "Pregnancy"));
+                foreach(Fish fi in qwr)
+                {
+                    fishsId.Add(fi.FishId);
+                }
+            }
+            List<Fish> fishs = new List<Fish>();
+            foreach (int f in fishsId)
+            {
+                fishs.Add(await this.repository.GetAsync<Fish>(true, x => x.FishId == f));
+            }
+            //List<Fish> fishs = new List<Fish>();
+            //foreach(Pool pool in pools)
+            //{
+            //    foreach(Fish f in this.repository.GetRange<Fish>(true, x => (x.PoolNowId == pool.PoolId && x.State == "Pregnancy")))
+            //    {
+            //        fishs.Add(f);
+            //    }
+            //}
+            return fishs.ToArray();
         }
     }
 }
