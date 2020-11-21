@@ -48,11 +48,14 @@ namespace ATARK.Controllers.db
             stateOfTheSystem.DateOfLastCheck = DateTime.Now;
 
             await this.repository.AddAsync<StateOfTheSystem>(stateOfTheSystem);
+
             StateOfTheSystem oldStateOfTheSystem = await this.repository.GetAsync<StateOfTheSystem>(true, x => x.ClosedWaterSupplyInstallation == closedWaterSupplyInstallation);
             int stateOfTheSystemId = oldStateOfTheSystem.StateOfTheSystemId;
             closedWaterSupplyInstallation.StateOfTheSystemId = stateOfTheSystemId;
             closedWaterSupplyInstallation.StateOfTheSystem = stateOfTheSystem;
             await this.repository.AddAsync<ClosedWaterSupplyInstallation>(closedWaterSupplyInstallation);
+
+
             Organization organization = await this.repository.GetAsync<Organization>(true, x => x.OrganizationId == closedWaterSupplyInstallation.OrganizationId);
             organization.ClosedWaterSupplyInstallations.Add(closedWaterSupplyInstallation);
             await this.repository.UpdateAsync<Organization>(organization);

@@ -14,7 +14,7 @@ namespace ATARK.Controllers.db
     public class HerdController : ControllerBase
     {
         private readonly IRepository repository;
-
+        
         public HerdController(IRepository repository)
         {
             this.repository = repository;
@@ -41,9 +41,24 @@ namespace ATARK.Controllers.db
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Herd herd)
         {
-            await this.repository.AddAsync<Herd>(herd);
-
+            var pool = await this.repository.GetAsync<Pool>(true, x => x.PoolId == herd.PoolIdNow);
+            string whoIsInThePool = pool.WhoIsInThePool;//fish herd none
+            if (whoIsInThePool == "herd")
+            {
+                await this.repository.AddAsync<Herd>(herd);
+            }
+            else if (whoIsInThePool == "none")
+            {
+                await this.repository.AddAsync<Herd>(herd);
+                pool.WhoIsInThePool = "herd";
+            }
+            else
+            {
+                throw new Exception("The fish is already in the pool");
+            }
+            await this.repository.UpdateAsync<Pool>(pool);
             return this.Ok();
+
         }
 
         [HttpPut]

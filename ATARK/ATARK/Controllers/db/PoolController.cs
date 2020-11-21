@@ -41,6 +41,7 @@ namespace ATARK.Controllers.db
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Pool pool)
         {
+            pool.WhoIsInThePool = "none";
             await this.repository.AddAsync<Pool>(pool);
 
             return this.Ok();

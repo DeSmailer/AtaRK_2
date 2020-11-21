@@ -91,5 +91,27 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Fish>(fish);
             return this.Ok();
         }
+
+        [HttpGet]
+        public async Task<IEnumerable<Fish>> GetAllPregnantFish()
+        {
+            var fish = await this.repository.GetRangeAsync<Fish>(true, x => x.State == "Pregnancy");
+            return fish.ToArray();
+        }
+        [HttpGet("{CWSI_Id}")]
+        public async Task<IEnumerable<Fish>> GetAllPregnantFishByCWSI_Id(int CWSI_Id)
+        {
+         var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSI_Id);
+            List<Fish> fishs = new List<Fish>();
+            foreach(Pool pool in pools)
+            {
+                fishs.AddRange(await this.repository.GetRangeAsync<Fish>(true, x => x.PoolNowId == pool.PoolId && x.State == "Pregnancy"));
+
+            }
+            return fishs.ToArray();
+            //from c in this.repository.dbContext.Customers
+            //where c.CustomerID == "LONEP"
+            //select c).Single<Customer>()
+        }
     }
 }
