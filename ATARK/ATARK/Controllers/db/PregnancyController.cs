@@ -41,6 +41,9 @@ namespace ATARK.Controllers.db
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Pregnancy pregnancy)
         {
+            var fish = await this.repository.GetAsync<Fish>(true, x => x.FishId == pregnancy.FishId);
+            fish.State = "Pregnancy";
+            await this.repository.UpdateAsync<Fish>(fish);
             await this.repository.AddAsync<Pregnancy>(pregnancy);
 
             return this.Ok();

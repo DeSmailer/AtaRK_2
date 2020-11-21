@@ -60,7 +60,7 @@ namespace ATARK.Controllers.db
             await this.repository.UpdateAsync<Milking>(currentMilking);
             return this.Ok();
 
-    }
+        }
 
         [HttpDelete("{milkingId}")]
         public async Task<IActionResult> Delete(int milkingId)
@@ -72,6 +72,17 @@ namespace ATARK.Controllers.db
             }
             await this.repository.DeleteAsync<Milking>(milking);
             return this.Ok();
+        }
+
+        [HttpGet("{fishId}")]
+        public async Task<IEnumerable<Milking>> GetByFishId(int fishId)
+        {
+            var milking = await this.repository.GetRangeAsync<Milking>(true, x => x.FishId == fishId);
+            if (milking == null)
+            {
+                throw new Exception("Milking not found.");
+            }
+            return milking.ToArray();
         }
     }
 }
