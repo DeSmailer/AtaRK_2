@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using ATARK.Models.Entity;
 using ATARK.Models.Interfaces;
@@ -28,6 +30,13 @@ namespace ATARK.Controllers.db
             return organization.ToArray();
         }
 
+        [HttpGet]   
+        public async Task<int> GetId([FromBody] Organization organization)
+        {
+            var currentOrganization = await this.repository.GetAsync<Organization>(true, x => (x.Mail == organization.Mail && x.Password == GetHashString(organization.Password)));
+            return organization.OrganizationId;
+        }
+
         [HttpGet("{organizationId}")]
         public async Task<Organization> GetById(int organizationId)
         {
@@ -42,9 +51,23 @@ namespace ATARK.Controllers.db
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Organization organization)
         {
+            organization.Password = GetHashString(organization.Password);
             await this.repository.AddAsync<Organization>(organization);
 
             return this.Ok();
+        }
+
+        string GetHashString(string s)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(s);
+            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
+            byte[] byteHash = CSP.ComputeHash(bytes);
+            string hash = string.Empty;
+            foreach (byte b in byteHash)
+            {
+                hash += string.Format("{0:x2}", b);
+            }
+            return hash;
         }
 
         [HttpPut]
@@ -56,7 +79,7 @@ namespace ATARK.Controllers.db
                 throw new Exception("Organization not found.");
             }
             currentOrganization.Mail = organization.Mail;
-            currentOrganization.Password = organization.Password;
+            currentOrganization.Password = GetHashString(organization.Password);
             currentOrganization.Name = organization.Name;
             currentOrganization.FoundationDate = organization.FoundationDate;
             currentOrganization.PhoneNumber = organization.PhoneNumber;
@@ -75,13 +98,5 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Organization>(organization);
             return this.Ok();
         }
-        //{
-        //  "OrganizationId" : "1",
-        //  "mail": "organization1@gmail.com",
-        //  "password": "qwe123",
-        //  "name": "organization1",
-        //  "foundationDate": "11/11/2011",
-        //  "phoneNumber": "+380992196335"
-        //}
     }
 }

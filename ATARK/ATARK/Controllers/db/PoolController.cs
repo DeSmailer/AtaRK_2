@@ -74,5 +74,11 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Pool>(pool);
             return this.Ok();
         }
+        [HttpGet("{CWSIId}")]
+        public async Task<IEnumerable<Pool>> GetAllPregnantFishByCWSI_Id(int CWSIId)
+        {
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            return pools.ToArray();
+        }
     }
 }
