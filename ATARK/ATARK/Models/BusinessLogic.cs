@@ -31,13 +31,15 @@ namespace ATARK.Models
         //7 если он был пуст, новый пол присвоить басейну
         //8 если засунули, то ОТТУДА ОТКУДА ВЗЯЛИ, удалим эту рыбу
         //9 помнять басейн для релокации в рыбе, из выбраного басейна(сколько может еще влесть) отнять вес той рыбы что засунули
-        
-        public async void Execute()
+
+        public void Execute()
         {
             //взяли всі басейни в системі
-            var oldPools =  await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            var oldPools = this.repository.GetRange<Pool>(true, x => (x.ClosedWaterSupplyInstallationId == CWSIId &&
+                   (x.WhoIsInThePool == "fish" || x.WhoIsInThePool == "none")));
             //список басейнів у які буде перерозподілено рибу 
             poolsForRedistribution = new List<BufferPool>();
+            listOfFishInThePool = new List<List<Fish>>();
 
             foreach (Pool pool in oldPools)
             {
@@ -45,13 +47,17 @@ namespace ATARK.Models
 
                 //заповнюємо список басейнів, у які буде перенаправлено рибу
                 poolsForRedistribution.Add(new BufferPool(pool.PoolId, "", pool.Volume * 40, pool.Volume * 40));
-
+                var fishsInThePool = this.repository.GetRange<Fish>(true, x => (x.PoolNowId == pool.PoolId));
                 //у кожен басейн записали список риби що у ньому
-                foreach (Fish f in this.repository.GetRange<Fish>(true, x => (x.PoolNowId == pool.PoolId)))
+                foreach (Fish f in fishsInThePool)
                 {
                     fishs.Add(f);
                 }
-                listOfFishInThePool.Add((List<Fish>)fishs.OrderByDescending(x => x.Weight)); 
+                if(fishs.Count >= 0)
+                {
+                    fishs.OrderByDescending(f => f.Weight);
+                    listOfFishInThePool.Add((List<Fish>)fishs); //.OrderByDescending(x => x.Weight)
+                }
             }
             //перерозподіл
             foreach (List<Fish> listFish in listOfFishInThePool)
@@ -63,43 +69,52 @@ namespace ATARK.Models
             }
         }
 
-        private async void MoveTo(Fish fish)
+        private void MoveTo(Fish fish)
         {
-            foreach(BufferPool bufferPool in poolsForRedistribution)
+            bool isAdded = false;
+            foreach (BufferPool bufferPool in poolsForRedistribution)
             {
-                if(bufferPool.sex.Equals("m") && fish.Sex.Equals("m")) //якщо басейн ще зовсім пустий
+                isAdded = false;
+                if (bufferPool.sex.Equals(fish.Sex))
                 {
                     if (fish.Weight <= bufferPool.spaceLeft)
                     {
                         UpdateRelocationPoolId(fish, bufferPool);
-                        break;
+                        isAdded = true;
                     }
                 }
-                else if(bufferPool.sex.Equals("w") && fish.Sex.Equals("w"))//якщо в ньому вже є жіночі особини
+                else if((bufferPool.sex.Equals("w") && fish.Sex.Equals("m"))|| (bufferPool.sex.Equals("m") && fish.Sex.Equals("w")))
                 {
-                    if (fish.Weight <= bufferPool.spaceLeft)
-                    {
-                        UpdateRelocationPoolId(fish, bufferPool);
-                        break;
-                    }
+                    continue;
                 }
-                else//чоловічі
+                else
                 {
                     if (fish.Weight <= bufferPool.spaceLeft)
                     {
                         UpdateRelocationPoolId(fish, bufferPool);
                         bufferPool.sex = fish.Sex;
-                        break;
+                        isAdded = true;
                     }
                 }
+                if (isAdded)
+                {
+                    break;
+                }
+            }
+            if (!isAdded)
+            {
+                var currentFish = this.repository.Get<Fish>(true, x => x.FishId == fish.FishId);
+                currentFish.RelocationPoolId = currentFish.PoolNowId;
+                this.repository.Update<Fish>(currentFish);
             }
         }
-        private async void UpdateRelocationPoolId(Fish fish, BufferPool bufferPool)
+
+        private void UpdateRelocationPoolId(Fish fish, BufferPool bufferPool)
         {
             bufferPool.spaceLeft = bufferPool.spaceLeft - fish.Weight;
-            var currentFish = await this.repository.GetAsync<Fish>(true, x => x.FishId == fish.FishId);
+            var currentFish = this.repository.Get<Fish>(true, x => x.FishId == fish.FishId);
             currentFish.RelocationPoolId = bufferPool.poolId;
-            await this.repository.UpdateAsync<Fish>(currentFish);
+            this.repository.Update<Fish>(currentFish);
         }
 
         private class BufferPool

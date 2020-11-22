@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ATARK.Models.Entity;
 using ATARK.Models.Interfaces;
+using ATARK.Models.TestClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,11 +75,29 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Pool>(pool);
             return this.Ok();
         }
+        //[HttpGet("{CWSIId}")]
+        //public async Task<IEnumerable<Pool>> GetAllPregnantFishByCWSI_Id(int CWSIId)
+        //{
+        //    var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+        //    return pools.ToArray();
+        //}
+
         [HttpGet("{CWSIId}")]
-        public async Task<IEnumerable<Pool>> GetAllPregnantFishByCWSI_Id(int CWSIId)
+        public async Task<IEnumerable<ExpectedWeightOfFishInThePool>> GetWeightOfFishInThePool(int CWSIId)
         {
             var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
-            return pools.ToArray();
+            List<ExpectedWeightOfFishInThePool> listExpectedWeightOfFishInThePools = new List<ExpectedWeightOfFishInThePool>();
+            foreach (Pool pool in pools)
+            {
+                ExpectedWeightOfFishInThePool expectedWeightOfFishInThePool = new ExpectedWeightOfFishInThePool(pool.PoolId, 40 * pool.Volume, 0);
+                foreach (Fish f in this.repository.GetRange<Fish>(true, x => x.RelocationPoolId == pool.PoolId))
+                {
+                    expectedWeightOfFishInThePool.currentWeight += f.Weight;
+                }
+                listExpectedWeightOfFishInThePools.Add(expectedWeightOfFishInThePool);
+            }
+            return listExpectedWeightOfFishInThePools.ToArray();
         }
+      
     }
 }
