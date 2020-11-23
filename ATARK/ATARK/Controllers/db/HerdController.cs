@@ -96,10 +96,10 @@ namespace ATARK.Controllers.db
             return fishs.ToArray();
         }
 
-        [HttpGet("{CWSIId}")]
-        public async Task<IEnumerable<Herd>> GetAllHerdByCWSIId(int CWSIId)
+        [HttpGet("{ClosedWaterSupplyInstallatioId}")]
+        public async Task<IEnumerable<Herd>> GetAllHerdByCWSIId(int ClosedWaterSupplyInstallatioId)
         {
-            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId);
             List<Herd> fishs = new List<Herd>();
             foreach (Pool pool in pools)
             {

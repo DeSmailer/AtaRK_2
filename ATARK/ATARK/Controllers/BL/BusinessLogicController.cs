@@ -21,10 +21,10 @@ namespace ATARK.Controllers.BL
             this.repository = repository;
         }
 
-        [HttpPut("{CWSIId}")]
-        public async Task<IActionResult> RedistributeFish(int CWSIId)
+        [HttpPut("{ClosedWaterSupplyInstallatioId}")]
+        public async Task<IActionResult> RedistributeFish(int ClosedWaterSupplyInstallatioId)
         {
-            BusinessLogic businessLogic = new BusinessLogic(repository, CWSIId);
+            BusinessLogic businessLogic = new BusinessLogic(repository, ClosedWaterSupplyInstallatioId);
             businessLogic.Execute();
 
             return this.Ok();

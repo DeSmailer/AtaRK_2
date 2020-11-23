@@ -9,33 +9,21 @@ namespace ATARK.Models
 {
     public class BusinessLogic
     {
-        private int CWSIId;
+        private int ClosedWaterSupplyInstallatioId;
         private List<List<Fish>> listOfFishInThePool;
         private readonly IRepository repository;
         private List<BufferPool> poolsForRedistribution;
 
-        public BusinessLogic(IRepository repository, int CWSIId)
+        public BusinessLogic(IRepository repository, int ClosedWaterSupplyInstallatioId)
         {
             this.repository = repository;
-            this.CWSIId = CWSIId;
+            this.ClosedWaterSupplyInstallatioId = ClosedWaterSupplyInstallatioId;
         }
-
-
-
-        //1 взять все басейны из этой системы
-        //2 взять для каждого басейна список рыб которые в нем
-        //3 взять допустимый вес риби в басейне
-        //4 создаем новый ссписок басейнов В которые переселяем(все те же басейны но пустые)
-        //5 берем в первом списке рыб басейна самую большую
-        //6 пытаемся засунуть в первый басейн(проверить влазит по весу и по полу)
-        //7 если он был пуст, новый пол присвоить басейну
-        //8 если засунули, то ОТТУДА ОТКУДА ВЗЯЛИ, удалим эту рыбу
-        //9 помнять басейн для релокации в рыбе, из выбраного басейна(сколько может еще влесть) отнять вес той рыбы что засунули
 
         public void Execute()
         {
             //взяли всі басейни в системі
-            var oldPools = this.repository.GetRange<Pool>(true, x => (x.ClosedWaterSupplyInstallationId == CWSIId &&
+            var oldPools = this.repository.GetRange<Pool>(true, x => (x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId &&
                    (x.WhoIsInThePool == "fish" || x.WhoIsInThePool == "none")));
             //список басейнів у які буде перерозподілено рибу 
             poolsForRedistribution = new List<BufferPool>();
@@ -49,14 +37,14 @@ namespace ATARK.Models
                 poolsForRedistribution.Add(new BufferPool(pool.PoolId, "", pool.Volume * 40, pool.Volume * 40));
                 var fishsInThePool = this.repository.GetRange<Fish>(true, x => (x.PoolNowId == pool.PoolId));
                 //у кожен басейн записали список риби що у ньому
-                foreach (Fish f in fishsInThePool)
+                foreach (Fish item in fishsInThePool)
                 {
-                    fishs.Add(f);
+                    fishs.Add(item);
                 }
                 if(fishs.Count >= 0)
                 {
                     fishs.OrderByDescending(f => f.Weight);
-                    listOfFishInThePool.Add((List<Fish>)fishs); //.OrderByDescending(x => x.Weight)
+                    listOfFishInThePool.Add((List<Fish>)fishs);
                 }
             }
             //перерозподіл

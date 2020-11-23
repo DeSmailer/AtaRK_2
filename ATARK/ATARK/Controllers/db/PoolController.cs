@@ -75,17 +75,11 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<Pool>(pool);
             return this.Ok();
         }
-        //[HttpGet("{CWSIId}")]
-        //public async Task<IEnumerable<Pool>> GetAllPregnantFishByCWSI_Id(int CWSIId)
-        //{
-        //    var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
-        //    return pools.ToArray();
-        //}
 
-        [HttpGet("{CWSIId}")]
-        public async Task<IEnumerable<ExpectedWeightOfFishInThePool>> GetWeightOfFishInThePool(int CWSIId)
+        [HttpGet("{ClosedWaterSupplyInstallatioId}")]
+        public async Task<IEnumerable<ExpectedWeightOfFishInThePool>> GetWeightOfFishInThePool(int ClosedWaterSupplyInstallatioId)
         {
-            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == CWSIId);
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId);
             List<ExpectedWeightOfFishInThePool> listExpectedWeightOfFishInThePools = new List<ExpectedWeightOfFishInThePool>();
             foreach (Pool pool in pools)
             {
