@@ -60,8 +60,13 @@ namespace ATARK.Models
         private void MoveTo(Fish fish)
         {
             bool isAdded = false;
+            BufferPool currentPool = new BufferPool(0,"w",0,0);
             foreach (BufferPool bufferPool in poolsForRedistribution)
             {
+                if(bufferPool.poolId == fish.PoolNowId)
+                {
+                    currentPool = bufferPool;
+                }
                 isAdded = false;
                 if (bufferPool.sex.Equals(fish.Sex))
                 {
@@ -93,6 +98,7 @@ namespace ATARK.Models
             {
                 var currentFish = this.repository.Get<Fish>(true, x => x.FishId == fish.FishId);
                 currentFish.RelocationPoolId = currentFish.PoolNowId;
+                currentPool.spaceLeft -= fish.Weight;
                 this.repository.Update<Fish>(currentFish);
             }
         }
@@ -119,6 +125,5 @@ namespace ATARK.Models
                 this.spaceLeft = spaceLeft;
             }
         }
-
     }
 }

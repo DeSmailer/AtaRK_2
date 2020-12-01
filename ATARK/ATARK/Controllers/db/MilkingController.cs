@@ -84,5 +84,31 @@ namespace ATARK.Controllers.db
             }
             return milking.ToArray();
         }
+
+        [HttpGet("{organizationId}")]
+        public async Task<IEnumerable<Milking>> GetByOrganizationId(int organizationId)
+        {
+            var closedWaterSupplyInstallations = await this.repository.GetRangeAsync<ClosedWaterSupplyInstallation>(true, x => x.OrganizationId == organizationId);
+            List<Milking> listMilking = new List<Milking>();
+            foreach (ClosedWaterSupplyInstallation item in closedWaterSupplyInstallations)
+            {
+                var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == item.ClosedWaterSupplyInstallationId);
+                foreach (Pool pool in pools)
+                {
+                    var fishsInThePool = await this.repository.GetRangeAsync<Fish>(true, x => x.PoolNowId == pool.PoolId);
+                    foreach (Fish fish in fishsInThePool)
+                    {
+                        var milking = await this.repository.GetRangeAsync<Milking>(true, x => x.FishId == fish.FishId);
+                        foreach (Milking milkingAtTheFish in milking)
+                        {
+                            listMilking.Add(milkingAtTheFish);
+                        }
+                    }
+
+                }
+            }
+           
+            return listMilking.ToArray();
+        }
     }
 }

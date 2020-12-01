@@ -80,6 +80,22 @@ namespace ATARK.Controllers.db
             return this.Ok();
     }
 
+        [HttpPut]
+        public async Task<IActionResult> UpdateRelocationPoolToPoolNow()
+        {
+            var fishs = await this.repository.GetRangeAsync<Fish>(true, x => true);
+            if (fishs == null)
+            {
+                throw new Exception("Fish not found.");
+            }
+            foreach(Fish fish in fishs)
+            {
+                fish.RelocationPoolId = fish.PoolNowId;
+                await this.repository.UpdateAsync<Fish>(fish);
+            }
+
+            return this.Ok();
+        }
         [HttpDelete("{fishId}")]
         public async Task<IActionResult> Delete(int fishId)
         {

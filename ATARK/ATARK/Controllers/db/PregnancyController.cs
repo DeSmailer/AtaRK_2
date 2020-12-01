@@ -62,7 +62,7 @@ namespace ATARK.Controllers.db
             await this.repository.UpdateAsync<Pregnancy>(currentPregnancy);
             return this.Ok();
 
-    }
+        }
 
         [HttpDelete("{pregnancyId}")]
         public async Task<IActionResult> Delete(int pregnancyId)

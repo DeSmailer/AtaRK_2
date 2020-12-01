@@ -34,7 +34,7 @@ namespace ATARK.Controllers.db
         public async Task<int> GetId([FromBody] Organization organization)
         {
             var currentOrganization = await this.repository.GetAsync<Organization>(true, x => (x.Mail == organization.Mail && x.Password == GetHashString(organization.Password)));
-            return organization.OrganizationId;
+            return currentOrganization.OrganizationId;
         }
 
         [HttpGet("{organizationId}")]

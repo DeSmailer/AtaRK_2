@@ -30,7 +30,8 @@ namespace ATARK.Controllers.db
         [HttpGet("{closedWaterSupplyInstallationId}")]
         public async Task<ClosedWaterSupplyInstallation> GetById(int closedWaterSupplyInstallationId)
         {
-            var closedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallationId);
+            var closedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true,
+                    x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallationId);
             if (closedWaterSupplyInstallation == null)
             {
                 throw new Exception("ClosedWaterSupplyInstallation not found.");
@@ -49,14 +50,16 @@ namespace ATARK.Controllers.db
 
             await this.repository.AddAsync<StateOfTheSystem>(stateOfTheSystem);
 
-            StateOfTheSystem oldStateOfTheSystem = await this.repository.GetAsync<StateOfTheSystem>(true, x => x.ClosedWaterSupplyInstallation == closedWaterSupplyInstallation);
+            StateOfTheSystem oldStateOfTheSystem = await this.repository.GetAsync<StateOfTheSystem>(true, x => x.ClosedWaterSupplyInstallation ==
+                    closedWaterSupplyInstallation);
             int stateOfTheSystemId = oldStateOfTheSystem.StateOfTheSystemId;
             closedWaterSupplyInstallation.StateOfTheSystemId = stateOfTheSystemId;
             closedWaterSupplyInstallation.StateOfTheSystem = stateOfTheSystem;
             await this.repository.AddAsync<ClosedWaterSupplyInstallation>(closedWaterSupplyInstallation);
 
 
-            Organization organization = await this.repository.GetAsync<Organization>(true, x => x.OrganizationId == closedWaterSupplyInstallation.OrganizationId);
+            Organization organization = await this.repository.GetAsync<Organization>(true, x => x.OrganizationId ==
+            closedWaterSupplyInstallation.OrganizationId);
             organization.ClosedWaterSupplyInstallations.Add(closedWaterSupplyInstallation);
             await this.repository.UpdateAsync<Organization>(organization);
 
@@ -67,7 +70,8 @@ namespace ATARK.Controllers.db
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ClosedWaterSupplyInstallation closedWaterSupplyInstallation)
         {
-            var currentClosedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.OrganizationId == closedWaterSupplyInstallation.ClosedWaterSupplyInstallationId);
+            var currentClosedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.OrganizationId ==
+                    closedWaterSupplyInstallation.ClosedWaterSupplyInstallationId);
             if (currentClosedWaterSupplyInstallation == null)
             {
                 throw new Exception("ClosedWaterSupplyInstallation not found.");
@@ -81,7 +85,8 @@ namespace ATARK.Controllers.db
         [HttpDelete("{closedWaterSupplyInstallationId}")]
         public async Task<IActionResult> Delete(int closedWaterSupplyInstallationId)
         {
-            var closedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallationId);
+            var closedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.ClosedWaterSupplyInstallationId ==
+                    closedWaterSupplyInstallationId);
             if (closedWaterSupplyInstallation == null)
             {
                 throw new Exception("ClosedWaterSupplyInstallation not found.");
@@ -91,9 +96,6 @@ namespace ATARK.Controllers.db
             await this.repository.DeleteAsync<ClosedWaterSupplyInstallation>(closedWaterSupplyInstallation);
             await this.repository.DeleteAsync<StateOfTheSystem>(stateOfTheSystem);
 
-
-            //var stateOfTheSystem = await this.repository.GetAsync<StateOfTheSystem>(true, x => x.StateOfTheSystemId == closedWaterSupplyInstallation.StateOfTheSystemId);
-            //await this.repository.DeleteAsync<StateOfTheSystem>(stateOfTheSystem);
             return this.Ok();
         }
     }

@@ -84,9 +84,9 @@ namespace ATARK.Controllers.db
             foreach (Pool pool in pools)
             {
                 ExpectedWeightOfFishInThePool expectedWeightOfFishInThePool = new ExpectedWeightOfFishInThePool(pool.PoolId, 40 * pool.Volume, 0);
-                foreach (Fish f in this.repository.GetRange<Fish>(true, x => x.RelocationPoolId == pool.PoolId))
+                foreach (Fish item in this.repository.GetRange<Fish>(true, x => x.RelocationPoolId == pool.PoolId))
                 {
-                    expectedWeightOfFishInThePool.currentWeight += f.Weight;
+                    expectedWeightOfFishInThePool.currentWeight += item.Weight;
                 }
                 listExpectedWeightOfFishInThePools.Add(expectedWeightOfFishInThePool);
             }
