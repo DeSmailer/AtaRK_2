@@ -5492,11 +5492,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\XHYPE\\AtaRK_2\\ATARK\\ATARK\\ATARK.csproj",
+      "projectUniqueName": "D:\\XHYPE\\AtaRK_back-end\\ATARK\\ATARK\\ATARK.csproj",
       "projectName": "ATARK",
-      "projectPath": "D:\\XHYPE\\AtaRK_2\\ATARK\\ATARK\\ATARK.csproj",
+      "projectPath": "D:\\XHYPE\\AtaRK_back-end\\ATARK\\ATARK\\ATARK.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\XHYPE\\AtaRK_2\\ATARK\\ATARK\\obj\\",
+      "outputPath": "D:\\XHYPE\\AtaRK_back-end\\ATARK\\ATARK\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

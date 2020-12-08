@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YSfpWpc48N8nW0F1UcDlxndnctHiYfWtCKPAM+PLBJMflMKUke4LLChRlELAxP1mwtLYiIxNHEZf8ERidWLPww==",
+  "dgSpecHash": "4j9/kmey6DG+gVdOXD+1emWhjHwLFZFC5PcQb+pqE+Vj0PfA6FI8UAA0EGP0tnssn+17M1x7to9pW5T/WgH4+Q==",
   "success": true,
-  "projectFilePath": "D:\\XHYPE\\AtaRK_2\\ATARK\\ATARK\\ATARK.csproj",
+  "projectFilePath": "D:\\XHYPE\\AtaRK_back-end\\ATARK\\ATARK\\ATARK.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\3.1.0\\microsoft.aspnetcore.jsonpatch.3.1.0.nupkg.sha512",

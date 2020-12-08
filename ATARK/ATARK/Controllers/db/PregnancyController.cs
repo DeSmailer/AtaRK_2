@@ -38,6 +38,18 @@ namespace ATARK.Controllers.db
             return pregnancy;
         }
 
+        [HttpGet("{fishId}")]
+        public async Task<IEnumerable<Pregnancy>> GetByFishId(int fishId)
+        {
+            var pregnancy = await this.repository.GetRangeAsync<Pregnancy>(true, x => x.FishId == fishId);
+            if (pregnancy == null)
+            {
+                throw new Exception("Pregnancy not found.");
+            }
+            return pregnancy.ToArray();
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Pregnancy pregnancy)
         {

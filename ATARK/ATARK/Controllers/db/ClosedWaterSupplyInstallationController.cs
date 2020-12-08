@@ -39,6 +39,18 @@ namespace ATARK.Controllers.db
             return closedWaterSupplyInstallation;
         }
 
+        [HttpGet("{organizatoinId}")]
+        public async Task<IEnumerable<ClosedWaterSupplyInstallation>> GetByOrganizatoinId(int organizatoinId)
+        {
+            var closedWaterSupplyInstallation = await this.repository.GetRangeAsync<ClosedWaterSupplyInstallation>(true,
+                    x => x.OrganizationId == organizatoinId);
+            if (closedWaterSupplyInstallation == null)
+            {
+                throw new Exception("ClosedWaterSupplyInstallation not found.");
+            }
+            return closedWaterSupplyInstallation.ToArray();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ClosedWaterSupplyInstallation closedWaterSupplyInstallation)
         {

@@ -38,6 +38,36 @@ namespace ATARK.Controllers.db
             }
             return pool;
         }
+        [HttpGet("{organizatoinId}")]
+        public async Task<IEnumerable<Pool>> GetByOrganizatoinId(int organizatoinId)
+        {
+            var closedWaterSupplyInstallations = await this.repository.GetRangeAsync<ClosedWaterSupplyInstallation>(true,
+                    x => x.OrganizationId == organizatoinId);
+            List<Pool> pools = new List<Pool>();
+            foreach (ClosedWaterSupplyInstallation closedWaterSupplyInstallation in closedWaterSupplyInstallations)
+            {
+                var pool = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallation.ClosedWaterSupplyInstallationId);
+                pools.AddRange(pool);
+            }
+            if (pools == null)
+            {
+                throw new Exception("Pool not found.");
+            }
+
+            return pools.ToArray();
+        }
+
+        [HttpGet("{closedWaterSupplyInstallationId}")]
+        public async Task<IEnumerable<Pool>> GetByCWIIdId(int closedWaterSupplyInstallationId)
+        {
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallationId);
+            if (pools == null)
+            {
+                throw new Exception("Pool not found.");
+            }
+
+            return pools.ToArray();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] Pool pool)
@@ -79,7 +109,7 @@ namespace ATARK.Controllers.db
         [HttpGet("{ClosedWaterSupplyInstallatioId}")]
         public async Task<IEnumerable<ExpectedWeightOfFishInThePool>> GetWeightOfFishInThePool(int ClosedWaterSupplyInstallatioId)
         {
-            var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId);
+            var pools = await this.repository.GetRangeAsync<Pool>(true, x => (x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId && x.WhoIsInThePool != "herd"));
             List<ExpectedWeightOfFishInThePool> listExpectedWeightOfFishInThePools = new List<ExpectedWeightOfFishInThePool>();
             foreach (Pool pool in pools)
             {
@@ -94,4 +124,5 @@ namespace ATARK.Controllers.db
         }
       
     }
+
 }

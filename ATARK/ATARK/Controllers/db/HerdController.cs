@@ -43,18 +43,14 @@ namespace ATARK.Controllers.db
         {
             var pool = await this.repository.GetAsync<Pool>(true, x => x.PoolId == herd.PoolIdNow);
             string whoIsInThePool = pool.WhoIsInThePool;//fish herd none
-            if (whoIsInThePool == "herd")
-            {
-                await this.repository.AddAsync<Herd>(herd);
-            }
-            else if (whoIsInThePool == "none")
+            if (whoIsInThePool == "none")
             {
                 await this.repository.AddAsync<Herd>(herd);
                 pool.WhoIsInThePool = "herd";
             }
             else
             {
-                throw new Exception("The fish is already in the pool");
+                throw new Exception("The pool is full");
             }
             await this.repository.UpdateAsync<Pool>(pool);
             return this.Ok();
@@ -86,6 +82,9 @@ namespace ATARK.Controllers.db
             {
                 throw new Exception("Herd not found.");
             }
+            var pool = await this.repository.GetAsync<Pool>(true, x => x.PoolId == herd.PoolIdNow);
+            pool.WhoIsInThePool = "none";
+            await this.repository.UpdateAsync<Pool>(pool);
             await this.repository.DeleteAsync<Herd>(herd);
             return this.Ok();
         }

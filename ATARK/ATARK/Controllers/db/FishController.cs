@@ -79,7 +79,18 @@ namespace ATARK.Controllers.db
             await this.repository.UpdateAsync<Fish>(currentFish);
             return this.Ok();
     }
-
+        [HttpPut("{fishId}")]
+        public async Task<IActionResult> ConfirmRelocation(int fishId)
+        {
+            var currentFish = await this.repository.GetAsync<Fish>(true, x => x.FishId == fishId);
+            if (currentFish == null)
+            {
+                throw new Exception("Fish not found.");
+            }
+            currentFish.PoolNowId = currentFish.RelocationPoolId;
+            await this.repository.UpdateAsync<Fish>(currentFish);
+            return this.Ok();
+        }
         [HttpPut]
         public async Task<IActionResult> UpdateRelocationPoolToPoolNow()
         {
@@ -116,25 +127,70 @@ namespace ATARK.Controllers.db
         }
 
         [HttpGet("{PoolIdId}")]
-        public async Task<IEnumerable<Fish>> GetAllPregnantFishByPoolId(int PoolIdId)
+        public async Task<IEnumerable<Fish>> GetFishByPoolId(int PoolIdId)
         {
-            var fishs = await this.repository.GetRangeAsync<Fish>(true, x => (x.PoolNowId == PoolIdId && x.State == "Pregnancy"));
+            var fishs = await this.repository.GetRangeAsync<Fish>(true, x => x.PoolNowId == PoolIdId);
+            return fishs.ToArray();
+        }
+
+        [HttpGet("{PoolIdId}")]
+        public async Task<IEnumerable<Fish>> GetFishForRelocationByPoolId(int PoolIdId)
+        {
+            var fishs = await this.repository.GetRangeAsync<Fish>(true, x => (x.RelocationPoolId == PoolIdId&& x.PoolNowId != x.RelocationPoolId));
             return fishs.ToArray();
         }
 
         [HttpGet("{ClosedWaterSupplyInstallatioId}")]
-        public async Task<IEnumerable<Fish>> GetAllPregnantFishByCWSI_Id(int ClosedWaterSupplyInstallatioId)
+        public async Task<IEnumerable<Fish>> GetAllFishByCWSI_Id(int ClosedWaterSupplyInstallatioId)
         {
             var pools = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == ClosedWaterSupplyInstallatioId);
             List<Fish> fishs = new List<Fish>();
             foreach (Pool pool in pools)
             {
-                foreach (Fish f in this.repository.GetRange<Fish>(true, x => (x.PoolNowId == pool.PoolId && x.State == "Pregnancy")))
+                foreach (Fish f in this.repository.GetRange<Fish>(true, x => x.PoolNowId == pool.PoolId))
                 {
                     fishs.Add(f);
                 }
             }
             return fishs.ToArray();
         }
+
+        //[HttpGet("{organizatoinId}")]
+        //public async Task<IEnumerable<Fish>> GetByOrganizatoinId(int organizatoinId)
+        //{
+
+        //    var closedWaterSupplyInstallations = await this.repository.GetRangeAsync<ClosedWaterSupplyInstallation>(true,
+        //           x => x.OrganizationId == organizatoinId);
+        //    List<Pool> pools = new List<Pool>();
+        //    List<Fish> fishs = new List<Fish>();
+
+        //    foreach (ClosedWaterSupplyInstallation closedWaterSupplyInstallation in closedWaterSupplyInstallations)
+        //    {
+        //        var pool = await this.repository.GetRangeAsync<Pool>(true, x => x.ClosedWaterSupplyInstallationId == closedWaterSupplyInstallation.ClosedWaterSupplyInstallationId);
+        //        pools.AddRange(pool);
+        //    }
+        //    foreach (Pool pool in pools)
+        //    {
+        //        var fish = await this.repository.GetRangeAsync<Fish>(true, x => x.PoolNowId == pool.PoolId);
+        //        fishs.AddRange(fish);
+        //    }
+            
+        //    List<Fish> fishs23 = new List<Fish>();
+        //    List<int> fishsId = new List<int>();
+        //    foreach (Fish f in fishs)
+        //    {
+        //        fishsId.Add(f.FishId);
+        //    }
+        //    foreach (int id in fishsId)
+        //    {
+        //        var fish = await this.repository.GetAsync<Fish>(true, x => x.FishId == id);
+        //        fishs23.Add(fish);
+        //    }
+        //    if (fishs == null)
+        //    {
+        //        throw new Exception("Pool not found.");
+        //    }
+        //    return fishs23.ToArray();
+        //}
     }
 }

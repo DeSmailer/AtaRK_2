@@ -30,11 +30,15 @@ namespace ATARK.Controllers.db
             return organization.ToArray();
         }
 
-        [HttpGet]   
+        [HttpPost]
         public async Task<int> GetId([FromBody] Organization organization)
         {
             var currentOrganization = await this.repository.GetAsync<Organization>(true, x => (x.Mail == organization.Mail && x.Password == GetHashString(organization.Password)));
-            return currentOrganization.OrganizationId;
+            if(currentOrganization != null)
+            {
+                return currentOrganization.OrganizationId;
+            }
+            return -1;
         }
 
         [HttpGet("{organizationId}")]
