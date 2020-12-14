@@ -82,7 +82,7 @@ namespace ATARK.Controllers.db
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ClosedWaterSupplyInstallation closedWaterSupplyInstallation)
         {
-            var currentClosedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.OrganizationId ==
+            var currentClosedWaterSupplyInstallation = await this.repository.GetAsync<ClosedWaterSupplyInstallation>(true, x => x.ClosedWaterSupplyInstallationId ==
                     closedWaterSupplyInstallation.ClosedWaterSupplyInstallationId);
             if (currentClosedWaterSupplyInstallation == null)
             {

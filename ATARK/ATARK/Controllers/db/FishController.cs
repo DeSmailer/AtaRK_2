@@ -43,7 +43,8 @@ namespace ATARK.Controllers.db
         {
             var pool = await this.repository.GetAsync<Pool>(true, x => x.PoolId == fish.PoolNowId);
             string whoIsInThePool = pool.WhoIsInThePool;//fish herd none
-            if(whoIsInThePool == "fish")
+            fish.RelocationPoolId = fish.PoolNowId;
+            if (whoIsInThePool == "fish")
             {
                 await this.repository.AddAsync<Fish>(fish);
             }
